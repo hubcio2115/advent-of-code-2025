@@ -2,7 +2,7 @@ defmodule Day04Test do
   use ExUnit.Case
   doctest Day04
 
-  test "correctly finds pairs producing the greates voltage for two digits" do
+  test "correctly finds rolls that can be safely removed" do
     input = """
     ..@@.@@@@.
     @@@.@.@.@@
