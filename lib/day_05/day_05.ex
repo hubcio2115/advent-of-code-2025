@@ -21,19 +21,39 @@ defmodule Day05 do
 
   @spec part2(String.t()) :: integer()
   def part2(input) do
-    fresh_id_range = String.split(input, "\n", trim: true)
-
-    fresh_ranges =
-      Enum.map(fresh_id_range, fn str ->
-        [left, right] =
-          String.split(str, "-", trim: true)
-          |> Enum.map(&String.to_integer/1)
+    fresh_id_range =
+      String.split(input, "\n", trim: true)
+      |> Enum.map(fn str ->
+        [left, right] = String.split(str, "-", trim: true) |> Enum.map(&String.to_integer/1)
 
         left..right
       end)
 
-    Enum.flat_map(fresh_ranges, &Enum.to_list/1)
-    |> Enum.into(MapSet.new())
-    |> MapSet.size()
+    {time, result} =
+      :timer.tc(fn ->
+        merged_ranges =
+          Enum.sort_by(fresh_id_range, fn start.._//_ -> start end)
+          |> Enum.reduce([], fn first..last//_ = current, acc ->
+            case acc do
+              [] ->
+                [current]
+
+              [prev_first..prev_last//_ | rest] ->
+                if prev_last >= first - 1 do
+                  new_last = max(prev_last, last)
+                  [prev_first..new_last | rest]
+                else
+                  [current | acc]
+                end
+            end
+          end)
+
+        Enum.reduce(merged_ranges, 0, fn range, acc ->
+          Range.size(range) + acc
+        end)
+      end)
+
+    IO.puts("Part 2 took #{time / 1000}ms")
+    result
   end
 end
